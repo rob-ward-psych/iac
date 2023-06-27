@@ -288,3 +288,85 @@ sim_batch = function(network, nsims, ncycles) {
   return(df)
 }
 
+#' Run sims with extra noise on specific units and/or connections
+#'
+#' This works like sim_batch, but adds noise to disrupt processing. Noise can be
+#' added to the activation of specific units during cycle(), and also noise can
+#' be added to the weights of specific connections. To add noise to specific
+#' units, use the noisy_units and xtra_unit_noise parameters. To add noise to
+#' the weights, use the noisy_cxn_src, noisy_cxn_dst, and xtra_cxn_noise
+#' parameters.
+#' These effects are in addition to the global noise parameter.
+#'
+#' @param network The network, with external inputs set and noise > 0
+#' @param nsims Number of simulations to run
+#' @param ncycles Number of cycles for a single simulation
+#' @param noisy_units A vector of unitnames which will be disrupted
+#' @param xtra_unit_noise The random noise added as input to any noisy_units,
+#' called as runif(min = -xtra_unit_noise, max = xtra_unit_noise) and applied
+#' as external input ot the noisy units
+#' @param noisy_cxn_src,noisy_cxn_dst Indices into network$weights specifying
+#' the set of weights that will be disrupted
+#' @param xtra_cxn_noise The random nise added to the noisy connection weight.
+#'   The noisy connections are reset to original values and new noise added each
+#'   cycle (ie not a random walk)
+#' @returns A dataframe containing the activations (indexed by the unitnames of
+#' the network), for each cycle (column "cycle") for each simulation
+#' (column "simno"). This output can then be used directly by RTs_generate()
+#'
+sim_batch_noisy = function(network, nsims, ncycles,
+                           noisy_units = NULL, xtra_unit_noise = 0,
+                           noisy_cxn_src = NULL, noisy_cxn_dst = NULL,
+                           xtra_cxn_noise = 0) {
+  #' preallocate a dataframe dfout to hold everything from this batch
+  dfout = data.frame(simno = rep(1:nsims, each=(ncycles+1)),
+                     cycle = rep(0:ncycles, times = nsims),
+                     act = matrix(-999, nrow = nsims*(ncycles+1), ncol = network$nunits))
+  colnames(dfout) = c('simno', 'cycle', network$unitnames)
+  acts = 3:ncol(dfout)
+
+  #' additional bookkeeping for noisy
+  if(!is.null(noisy_cxn_src)) {
+    # store the original non-noisy connections
+    noisy_cxns_base = network$weights[noisy_cxn_src, noisy_cxn_dst]
+    size_noisy_cxns = length(noisy_cxn_src) * length(noisy_cxn_dst)
+  } else {
+    size_noisy_cxns = 0
+  }
+  num_noisy_units = ifelse(is.null(noisy_units), 0, length(noisy_units))
+
+  i = 1
+  pb = txtProgressBar(min=0, max=nsims, initial = 0, style = 3)
+  for(sim in 1:nsims) {
+    network = iac::reset(network)
+    dfout[i, acts] = network$activations # cycle 0 = resting state activations
+    i = i + 1
+    for(cy in 1:ncycles) {
+      if(size_noisy_cxns > 0) {
+        #' Add some random noise to the weights themselves
+        network$weights[noisy_cxn_src, noisy_cxn_dst] =
+          noisy_cxns_base + runif(size_noisy_cxns, -xtra_cxn_noise, xtra_cxn_noise)
+      }
+      if(num_noisy_units > 0) {
+        unit_noise = runif(num_noisy_units, -xtra_unit_noise, xtra_unit_noise)
+        network$external[noisy_units] = network$external[noisy_units] + unit_noise
+      }
+      network = iac::cycle(network, ncycles=1, warnings = TRUE,
+                           verbose = FALSE, OG = FALSE)
+      dfout[i, acts] = network$activations
+      # return the weights and external input to origianl values
+      if(size_noisy_cxns > 0) {
+        network$weights[noisy_cxn_src, noisy_cxn_dst] = noisy_cxns_base
+      }
+      if(num_noisy_units > 0) {
+        network$external[noisy_units] = network$external[noisy_units] - unit_noise
+      }
+
+      i = i + 1
+    }
+    setTxtProgressBar(pb, sim)
+    Sys.sleep(.01)
+  }
+  close(pb)
+  return(dfout)
+}
