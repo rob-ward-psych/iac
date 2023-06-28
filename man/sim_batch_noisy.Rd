@@ -39,10 +39,6 @@ cycle (ie not a random walk)}
 A dataframe containing the activations (indexed by the unitnames of
 the network), for each cycle (column "cycle") for each simulation
 (column "simno"). This output can then be used directly by RTs_generate()
-
-preallocate a dataframe dfout to hold everything from this batch
-additional bookkeeping for noisy
-Add some random noise to the weights themselves
 }
 \description{
 This works like sim_batch, but adds noise to disrupt processing. Noise can be

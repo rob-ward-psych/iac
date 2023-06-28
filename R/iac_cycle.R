@@ -313,19 +313,20 @@ sim_batch = function(network, nsims, ncycles) {
 #' @returns A dataframe containing the activations (indexed by the unitnames of
 #' the network), for each cycle (column "cycle") for each simulation
 #' (column "simno"). This output can then be used directly by RTs_generate()
+#' @export
 #'
 sim_batch_noisy = function(network, nsims, ncycles,
                            noisy_units = NULL, xtra_unit_noise = 0,
                            noisy_cxn_src = NULL, noisy_cxn_dst = NULL,
                            xtra_cxn_noise = 0) {
-  #' preallocate a dataframe dfout to hold everything from this batch
+  # preallocate a dataframe dfout to hold everything from this batch
   dfout = data.frame(simno = rep(1:nsims, each=(ncycles+1)),
                      cycle = rep(0:ncycles, times = nsims),
                      act = matrix(-999, nrow = nsims*(ncycles+1), ncol = network$nunits))
   colnames(dfout) = c('simno', 'cycle', network$unitnames)
   acts = 3:ncol(dfout)
 
-  #' additional bookkeeping for noisy
+  # additional bookkeeping for noisy
   if(!is.null(noisy_cxn_src)) {
     # store the original non-noisy connections
     noisy_cxns_base = network$weights[noisy_cxn_src, noisy_cxn_dst]
@@ -343,7 +344,7 @@ sim_batch_noisy = function(network, nsims, ncycles,
     i = i + 1
     for(cy in 1:ncycles) {
       if(size_noisy_cxns > 0) {
-        #' Add some random noise to the weights themselves
+        # Add some random noise to the weights themselves
         network$weights[noisy_cxn_src, noisy_cxn_dst] =
           noisy_cxns_base + stats::runif(size_noisy_cxns, -xtra_cxn_noise, xtra_cxn_noise)
       }
