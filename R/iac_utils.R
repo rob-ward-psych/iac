@@ -102,25 +102,23 @@ plot_act2 = function(log, roi, condition=NULL, labelstyle="last.bumpup", ...) {
     stop("The lattice and directlabels packages need to be installed to use this function.",
          call. = FALSE)
   }
-  library(lattice)
-  library(directlabels)
   if(is.numeric(roi)) { roi = colnames(log)[roi] }
   if(is.numeric(condition)) { condition = colnames(log)[condition]}
   stopifnot(all(c(roi, "cycle", condition) %in% colnames(log)))
-  #' aggregate to get means if necessary
-  o = aggregate(log[roi], by=log[c("cycle", condition)], mean)
+  # aggregate to get means if necessary
+  o = stats::aggregate(log[roi], by=log[c("cycle", condition)], mean)
   roi = paste(roi, collapse = " + ")
   if(is.null(condition)) {
-    f = formula(paste(roi, "~ cycle"))
+    f = stats::formula(paste(roi, "~ cycle"))
     nfacs = 1
   }
   else {
     nfacs = length(table(o[[condition]]))
-    f = formula(paste(roi, "~ cycle |", condition))
+    f = stats::formula(paste(roi, "~ cycle |", condition))
   }
-  p = xyplot(f, data = o, type ='l', layout=(c(nfacs,1)), xlab="Cycle",
+  p = lattice::xyplot(f, data = o, type ='l', layout=(c(nfacs,1)), xlab="Cycle",
              ylab="Activation", ...)
-  print(direct.label(p, labelstyle))
+  print(directlabels::direct.label(p, labelstyle))
 }
 
 #' Extract the weights between two pools

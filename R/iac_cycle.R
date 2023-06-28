@@ -336,7 +336,7 @@ sim_batch_noisy = function(network, nsims, ncycles,
   num_noisy_units = ifelse(is.null(noisy_units), 0, length(noisy_units))
 
   i = 1
-  pb = txtProgressBar(min=0, max=nsims, initial = 0, style = 3)
+  pb = utils::txtProgressBar(min=0, max=nsims, initial = 0, style = 3)
   for(sim in 1:nsims) {
     network = iac::reset(network)
     dfout[i, acts] = network$activations # cycle 0 = resting state activations
@@ -345,10 +345,10 @@ sim_batch_noisy = function(network, nsims, ncycles,
       if(size_noisy_cxns > 0) {
         #' Add some random noise to the weights themselves
         network$weights[noisy_cxn_src, noisy_cxn_dst] =
-          noisy_cxns_base + runif(size_noisy_cxns, -xtra_cxn_noise, xtra_cxn_noise)
+          noisy_cxns_base + stats::runif(size_noisy_cxns, -xtra_cxn_noise, xtra_cxn_noise)
       }
       if(num_noisy_units > 0) {
-        unit_noise = runif(num_noisy_units, -xtra_unit_noise, xtra_unit_noise)
+        unit_noise = stats::runif(num_noisy_units, -xtra_unit_noise, xtra_unit_noise)
         network$external[noisy_units] = network$external[noisy_units] + unit_noise
       }
       network = iac::cycle(network, ncycles=1, warnings = TRUE,
@@ -364,7 +364,7 @@ sim_batch_noisy = function(network, nsims, ncycles,
 
       i = i + 1
     }
-    setTxtProgressBar(pb, sim)
+    utils::setTxtProgressBar(pb, sim)
     Sys.sleep(.01)
   }
   close(pb)
