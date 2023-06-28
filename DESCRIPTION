@@ -3,11 +3,13 @@ Title: Interactive Activation and Competition (IAC) Networks
 Version: 0.1.0
 Authors@R: 
     person("Robert", "Ward", , "r.ward@bangor.ac.uk", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
+           comment = c(ORCID = "0000-0002-1917-2035"))
 Description: Cognitive modelling using interactive activation and competition, in the style of McClelland & Rumelhart (1981). 
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Suggests: 
-    yaml
+    yaml,
+    lattice,
+    directlabels

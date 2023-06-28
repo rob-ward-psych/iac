@@ -14,7 +14,8 @@
 #' @inheritDotParams graphics::matplot
 #' @export
 #'
-plot_activation = function(toplot, roi = NULL, cycles = NULL, mar = c(4,4,2,3), ...) {
+plot_activation = function(toplot, roi = NULL, cycles = NULL,
+                           mar = c(4,4,2,3), ...) {
   # plot_fn uses matplot, which uses matrices
   # Assumes dimnames(M)[[1]] = cyclenos; dimnames(M)[[2]] = unitnames
   plot_fn = function(M, x, unitnames, ...) {
@@ -70,6 +71,56 @@ plot_activation = function(toplot, roi = NULL, cycles = NULL, mar = c(4,4,2,3), 
   colnames(M) = roi
   # wow finally ready to plot
   plot_fn(M, x, roi, ...)
+}
+
+#' Plot selected unit activations by cycle with formula and labels
+#'
+#' Make a quick plot of selected unit activations, using the lattice and
+#' directlabels packages
+#'
+#' @param log A dataframe of unit activations, eg a network$log. Unlike the
+#'   regular plot_activation fn, this one can also plot the output of
+#'   sim_batch(). The plotted results are the mean activation of each cycle. One
+#'   of the columns must be named "cycle" (as will be the case if a network$log
+#'   or output from sim_batch is plotted)
+#' @param roi A vector specifying which columns to plot, this can be either
+#'   numeric values specifying indices, or ideally, unit names
+#' @param condition The name of a column which will serve as a conditional
+#'   variable, that is, unit activations will be plotted as function of the
+#'   different levels of this factor (e.g. "accuracy" might have correct and
+#'   incorrect, meaning all unit activations will have a value for corret and
+#'   incorrect trials)
+#' @param labelstyle A label style that is valid for the directlabels package
+#'   (default = "last.bumpup")
+#' @inheritDotParams lattice::xyplot
+#' @seealso read_net(), set_external(), cycle(), reset()
+#' @export
+#'
+plot_act2 = function(log, roi, condition=NULL, labelstyle="last.bumpup", ...) {
+  if(!(requireNamespace("lattice", quietly=TRUE) &
+       requireNamespace("directlabels", quietly=TRUE))) {
+    stop("The lattice and directlabels packages need to be installed to use this function.",
+         call. = FALSE)
+  }
+  library(lattice)
+  library(directlabels)
+  if(is.numeric(roi)) { roi = colnames(log)[roi] }
+  if(is.numeric(condition)) { condition = colnames(log)[condition]}
+  stopifnot(all(c(roi, "cycle", condition) %in% colnames(log)))
+  #' aggregate to get means if necessary
+  o = aggregate(log[roi], by=log[c("cycle", condition)], mean)
+  roi = paste(roi, collapse = " + ")
+  if(is.null(condition)) {
+    f = formula(paste(roi, "~ cycle"))
+    nfacs = 1
+  }
+  else {
+    nfacs = length(table(o[[condition]]))
+    f = formula(paste(roi, "~ cycle |", condition))
+  }
+  p = xyplot(f, data = o, type ='l', layout=(c(nfacs,1)), xlab="Cycle",
+             ylab="Activation", ...)
+  print(direct.label(p, labelstyle))
 }
 
 #' Extract the weights between two pools
