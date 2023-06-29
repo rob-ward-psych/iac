@@ -1,0 +1,61 @@
+
+# aliases are an easy way to specify repeating units (change one time here rather than throughout the file)
+aliases: [
+  &the_gangsters [Art, Al, Sam, Clyde, Mike, Jim,
+  Greg, John, Doug, Lance, George, Pete, Fred,
+  Gene, Ralph, Phil, Ike, Nick, Don, Ned, Karl,
+  Ken, Earl, Rick, Ol, Neal, Dave],
+  &w 1.0,   # used by McC&R for excitatory connections
+  &v -1.0,  # McC&R for inhibition within instance pool
+  &h -1.0,  #.McC&R for inhibition within all other pools (which are 2-3 units instead of the 27 in instance)
+  # although the original model allowed separate weights for these different types of connection, in practice they were all just set to +/- 1.0
+]
+pools: [
+  {name: gang, shape: 2, unitnames: [jets, sharks]},
+  {name: age, shape: 3, unitnames: [in20s, in30s, in40s]},
+  {name: education, shape: 3, unitnames: [jh, hs, college]},
+  {name: marital, shape: 3, unitnames: [single, married, divorced]},
+  {name: job, shape: 3, unitnames: [pusher, burglar, bookie]},
+  {name: name, shape: 27, unitnames: *the_gangsters },
+  {name: instance, shape: 27, basenames: *the_gangsters, prefix: _},
+]
+
+parameters: { max: 1, min: -.2, rest: -.1, decay: .1, estr: .4, alpha: .1, gamma: .1, noise: 0 }
+  
+connections: [
+  {from: _Art, to: [Art, jets, in40s, jh, single, pusher], weight: *w},
+  {from: _Al, to: [Al, jets, in40s, jh, single, burglar], weight: *w},
+  {from: _Sam, to: [Sam, jets, in20s, college, single, bookie], weight: *w},
+  {from: _Clyde, to: [Clyde, jets, in40s, jh, single, bookie], weight: *w},
+  {from: _Mike, to: [Mike, jets, in30s, jh, single, bookie], weight: *w},
+  {from: _Jim, to: [Jim, jets, in20s, jh, divorced, burglar], weight: *w},
+  {from: _Greg, to: [Greg, jets, in20s, hs, married, pusher], weight: *w},
+  {from: _John, to: [John, jets, in20s, jh, married, burglar], weight: *w},
+  {from: _Doug, to: [Doug, jets, in30s, hs, single, bookie], weight: *w},
+  {from: _Lance, to: [Lance, jets, in20s, jh, married, burglar], weight: *w},
+  {from: _George, to: [George, jets, in20s, jh, divorced, burglar], weight: *w},
+  {from: _Pete, to: [Pete, jets, in20s, hs, single, bookie], weight: *w},
+  {from: _Fred, to: [Fred, jets, in20s, hs, single, pusher], weight: *w},
+  {from: _Gene, to: [Gene, jets, in20s, college, single, pusher], weight: *w},
+  {from: _Ralph, to: [Ralph, jets, in30s, jh, single, pusher], weight: *w},
+  {from: _Phil, to: [Phil, sharks, in30s, college, married, pusher], weight: *w},
+  {from: _Ike, to: [Ike, sharks, in30s, jh, single, bookie], weight: *w},
+  {from: _Nick, to: [Nick, sharks, in30s, hs, single, pusher], weight: *w},
+  {from: _Don, to: [Don, sharks, in30s, college, married, burglar], weight: *w},
+  {from: _Ned, to: [Ned, sharks, in30s, college, married, bookie], weight: *w},
+  {from: _Karl, to: [Karl, sharks, in40s, college, married, bookie], weight: *w},
+  {from: _Ken, to: [Ken, sharks, in20s, hs, single, burglar], weight: *w},
+  {from: _Earl, to: [Earl, sharks, in40s, hs, married, burglar], weight: *w},
+  {from: _Rick, to: [Rick, sharks, in30s, hs, divorced, burglar], weight: *w},
+  {from: _Ol, to: [Ol, sharks, in30s, college, married, pusher], weight: *w},
+  {from: _Neal, to: [Neal, sharks, in30s, hs, single, bookie], weight: *w},
+  {from: _Dave, to: [Dave, sharks, in30s, hs, divorced, pusher], weight: *w},
+  # within-pool inhibition
+  {from: instance, to: instance, weight: *v, directives: others},
+  {from: gang, to: gang, weight: *h, directives: others},
+  {from: age, to: age, weight: *h, directives: others},
+  {from: education, to: education, weight: *h, directives: others},
+  {from: marital, to: marital, weight: *h, directives: others},
+  {from: job, to: job, weight: *h, directives: others},
+  {from: name, to: name, weight: *h, directives: others},
+]

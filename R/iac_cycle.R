@@ -23,8 +23,8 @@
 #' is not optimised but much faster, especially with networks of 100+ units
 #' (default FALSE)
 #' @return A network with updated activation state and activation log,
-#'  suitable for plot_activation()
-#' @seealso read_net(), set_external(), plot_activation(), reset()
+#'  suitable for `plot_log()`
+#' @seealso read_net(),set_external(),plot_log(),reset()
 #' @export
 #'
 cycle = function(network, ncycles = 1,
@@ -201,7 +201,7 @@ cycle = function(network, ncycles = 1,
 #' external inputs seemed to make things tidier when running repeated simulations
 #' @param network The network
 #' @return The network with resting activation and cleared activation log
-#' @seealso read_net(), set_external(), cycle(), plot_activation()
+#' @seealso read_net(),set_external(),cycle(),plot_log()
 #' @export
 #'
 reset = function(network) {

@@ -66,3 +66,15 @@ room for labels on the right (default = c(4,4,2,3))}
 \description{
 Plot a network log with selected unit activations
 }
+\examples{
+# load the jets-sharks example
+jetsh = read_net(iac_example("jets_sharks.yaml"), verbose =FALSE)
+# do a partial retrieval of Ken's properties from his name
+jetsh = set_external(jetsh, "Ken", 1.0)
+jetsh = iac::cycle(jetsh, ncycles = 100)
+# Ken is a burglar in the Sharks, what is retrieved from his name?
+# plot Ken's properties and some others
+plot_log(jetsh, roi=c("Ken", "_Ken", "jets", "sharks", "burglar", "bookie"),
+main="Ken is a burgling Shark")
+
+}

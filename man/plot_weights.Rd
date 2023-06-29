@@ -8,9 +8,9 @@ plot_weights(weights, ...)
 }
 \arguments{
 \item{weights}{The weights to be plotted. This can  be the full weights
-matrix (e.g., network$weights), but for bigger networks it can be more
+matrix (e.g., \code{network$weights}), but for bigger networks it can be more
 useful to look at a subset. This subset of weights can be specified
-manually (e.g., network$weights\link{1:5, 20:29}), or conveniently using
+manually (e.g., \code{network$weights[1:5, 20:29]}), or conveniently using
 weights_slice(), which makes it easy to extract the connections between two
 pools within a network.}
 
@@ -29,4 +29,12 @@ The sending (or "from") units are plotted on the y-axis, the receiving (or
 square in the plot. White squares represent positive weights, black squares
 for negative weights. The area of each square is proportional to the weight.
 All squares are normalised relative to the weight of largest magnitude.
+}
+\examples{
+# load the jets_sharks network
+jetsh = read_net(iac_example("jets_sharks.yaml"), verbose = FALSE)
+# plot all the weights
+plot_weights(jetsh$weights)
+# just the instance -> gang connections
+plot_weights(weights_slice(jetsh, from='instance', to='gang'))
 }

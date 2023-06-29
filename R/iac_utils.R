@@ -11,6 +11,17 @@
 #' @param mar Optionally call the mar graphics parameter, useful for making more
 #'   room for labels on the right (default = c(4,4,2,3))
 #' @inheritDotParams graphics::matplot
+#' @examples
+#' # load the jets-sharks example
+#' jetsh = read_net(iac_example("jets_sharks.yaml"), verbose =FALSE)
+#' # do a partial retrieval of Ken's properties from his name
+#' jetsh = set_external(jetsh, "Ken", 1.0)
+#' jetsh = iac::cycle(jetsh, ncycles = 100)
+#' # Ken is a burglar in the Sharks, what is retrieved from his name?
+#' # plot Ken's properties and some others
+#' plot_log(jetsh, roi=c("Ken", "_Ken", "jets", "sharks", "burglar", "bookie"),
+#' main="Ken is a burgling Shark")
+#'
 #' @export
 #'
 plot_log = function(toplot, roi = NULL, cycles = NULL,
@@ -134,6 +145,7 @@ plot_acts = function(log, roi, condition=NULL, cycles = NULL, labelstyle="last.b
 #' the `from` pool, and columns are units from the `to` pool.
 #' This matrix is suitable for plot_weights() or other inspection
 #' @seealso plot_weights(), read_net()
+#'
 #' @export
 #'
 weights_slice = function(network, from, to) {
@@ -152,12 +164,19 @@ weights_slice = function(network, from, to) {
 #' for negative weights. The area of each square is proportional to the weight.
 #' All squares are normalised relative to the weight of largest magnitude.
 #' @param weights The weights to be plotted. This can  be the full weights
-#'   matrix (e.g., network$weights), but for bigger networks it can be more
+#'   matrix (e.g., `network$weights`), but for bigger networks it can be more
 #'   useful to look at a subset. This subset of weights can be specified
-#'   manually (e.g., network$weights[1:5, 20:29]), or conveniently using
+#'   manually (e.g., `network$weights[1:5, 20:29]`), or conveniently using
 #'   weights_slice(), which makes it easy to extract the connections between two
 #'   pools within a network.
 #' @inheritDotParams graphics::plot
+#' @examples
+#' # load the jets_sharks network
+#' jetsh = read_net(iac_example("jets_sharks.yaml"), verbose = FALSE)
+#' # plot all the weights
+#' plot_weights(jetsh$weights)
+#' # just the instance -> gang connections
+#' plot_weights(weights_slice(jetsh, from='instance', to='gang'))
 #' @export
 #'
 plot_weights = function(weights, ...) {
@@ -211,4 +230,29 @@ show_weights = function(network, from = NULL, to = NULL) {
     }
   }
   return(vec)
+}
+
+#' Get path to IAC example
+#'
+#' iac comes bundled with some example files in its inst/extdata directory. This
+#' function make them easy to access.
+#' @param path Name of file. If NULL all the example files are listed.
+#' @examples
+#' # get a list of all available files
+#' iac_example()
+#' # load the jets-sharks network
+#' jetsh = iac_example("jets_sharks.yaml")
+#' net = read_net(jetsh)
+#' # open an example for inspection in RStudio
+#' file.edit(iac_example("what_where.yaml"))
+#' @export
+#'
+iac_example = function (path = NULL)
+{
+  if (is.null(path)) {
+    dir(system.file("extdata", package = "iac"))
+  }
+  else {
+    system.file("extdata", path, package = "iac", mustWork = TRUE)
+  }
 }

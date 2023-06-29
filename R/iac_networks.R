@@ -303,10 +303,12 @@ connect_units = function(network, from, to, weight, directives = 'reciprocal',
   cxns[, 'weight'] = weight
   if('others' %in% directives) {
     # expand.grid produces Var1 and Var2 as colnames
-    cxns = subset(cxns, Var1 != Var2)
+    cxns = cxns[cxns$Var1 != cxns$Var2, ]
+    # cxns = subset(cxns, Var1 != Var2)
   }
   else if('self' %in% directives) {
-    cxns = subset(cxns, Var1 == Var2)
+    cxns = cxns[cxns$Var1 == cxns$Var2, ]
+    # cxns = subset(cxns, Var1 == Var2)
   }
   v1 = cxns[,1]; v2=cxns[,2]; v3 = cxns[,3]
   coord_forw = cbind(v1, v2)
@@ -409,6 +411,13 @@ add_pool = function(network, poolname, shape, unitnames, verbose = FALSE) {
 #' existing network being elaborated is passed as an argument here.
 #' @returns A new network as described in the .yaml file
 #' @export
+#' @examples
+#' jetsh = read_net(iac_example("jets_sharks.yaml"))
+#' jetsh = set_external(jetsh, "Ken", 1.0)
+#' jetsh = iac::cycle(jetsh, ncycles = 100)
+#' #
+#' plot_log(jetsh, roi=c("Ken", "_Ken", "jets", "sharks", "burglar", "bookie"),
+#' main="Ken is a burgling Shark")
 #'
 read_net = function(yaml_file, verbose = TRUE, network = NULL) {
   if(!requireNamespace("yaml", quietly=TRUE)) {
@@ -507,7 +516,7 @@ read_net = function(yaml_file, verbose = TRUE, network = NULL) {
     network$params = load_params(netspec$parameters)
   }
   network = reset(network)
-  if(verbose) {message("Network sucessfully read and ready to go.")}
+  if(verbose) {message("Network read sucessfully and ready to go.")}
   return(network)
 }
 

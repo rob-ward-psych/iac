@@ -20,5 +20,5 @@ to zero those. Separating reset of network activation values from reset of
 external inputs seemed to make things tidier when running repeated simulations
 }
 \seealso{
-read_net(), set_external(), cycle(), plot_activation()
+read_net(),set_external(),cycle(),plot_log()
 }

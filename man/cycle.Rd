@@ -23,7 +23,7 @@ is not optimised but much faster, especially with networks of 100+ units
 }
 \value{
 A network with updated activation state and activation log,
-suitable for plot_activation()
+suitable for \code{plot_log()}
 }
 \description{
 The network is run in discrete cycles. Each cycle, the input for all units
@@ -39,5 +39,5 @@ The second step of the cycle is to \emph{update} unit activations based on their
 input. The activation function is direct from McClelland & Rumelhart (1981).
 }
 \seealso{
-read_net(), set_external(), plot_activation(), reset()
+read_net(),set_external(),plot_log(),reset()
 }

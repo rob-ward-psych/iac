@@ -24,3 +24,12 @@ A new network as described in the .yaml file
 This is the intended method for network creation. Details are given in the
 document iac_creating_networks.md.
 }
+\examples{
+jetsh = read_net(iac_example("jets_sharks.yaml"))
+jetsh = set_external(jetsh, "Ken", 1.0)
+jetsh = iac::cycle(jetsh, ncycles = 100)
+#
+plot_log(jetsh, roi=c("Ken", "_Ken", "jets", "sharks", "burglar", "bookie"),
+main="Ken is a burgling Shark")
+
+}
