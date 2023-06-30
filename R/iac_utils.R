@@ -135,11 +135,11 @@ plot_acts = function(toplot, roi, condition=NULL, cycles = NULL, labelstyle="las
     stop("The lattice and directlabels packages need to be installed to use this function.",
          call. = FALSE)
   }
-  if(is.numeric(roi)) { roi = colnames(log)[roi] }
-  if(is.numeric(condition)) { condition = colnames(log)[condition]}
-  stopifnot(all(c(roi, "cycle", condition) %in% colnames(log)))
+  if(is.numeric(roi)) { roi = colnames(toplot)[roi] }
+  if(is.numeric(condition)) { condition = colnames(toplot)[condition]}
+  stopifnot(all(c(roi, "cycle", condition) %in% colnames(toplot)))
   # aggregate to get means if necessary
-  o = stats::aggregate(log[roi], by=log[c("cycle", condition)], mean)
+  o = stats::aggregate(toplot[roi], by=toplot[c("cycle", condition)], mean)
   if(!is.null(cycles)) {
     o = o[which(o$cycle %in% cycles), ]
   }
