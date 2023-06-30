@@ -27,8 +27,8 @@ document iac_creating_networks.md.
 \examples{
 jetsh = read_net(iac_example("jets_sharks.yaml"))
 jetsh = set_external(jetsh, "Ken", 1.0)
-jetsh = iac::cycle(jetsh, ncycles = 100)
-#
+jetsh = cycle(jetsh, ncycles = 100)
+# Ken is a burglar in the Sharks, what is retrieved from his name?
 plot_log(jetsh, roi=c("Ken", "_Ken", "jets", "sharks", "burglar", "bookie"),
 main="Ken is a burgling Shark")
 

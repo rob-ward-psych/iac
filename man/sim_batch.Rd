@@ -2,9 +2,7 @@
 % Please edit documentation in R/iac_cycle.R
 \name{sim_batch}
 \alias{sim_batch}
-\title{Runs a batch of simulations. This is useful when you want to generate a
-distrbution of results when using the noise parameter (without noise, every
-run of a network will be the same)}
+\title{Run a batch of simulations.}
 \usage{
 sim_batch(network, nsims, ncycles)
 }
@@ -21,10 +19,35 @@ in the network, and rows provide activations for each unit on each cycle of
 each sim.
 }
 \description{
-Runs a batch of simulations. This is useful when you want to generate a
-distrbution of results when using the noise parameter (without noise, every
-run of a network will be the same)
+This is useful when you want to generate a
+distrbution of results while using the noise parameter. Without noise, every
+run of a network will be the same, and so there's not much point in running
+a batch.
+}
+\details{
+The \code{noise} param can be set in the network .yaml file, or manually as
+\code{network$params$noise = .01} (or whatever value)
+}
+\examples{
+\dontrun{
+# This would take time to run
+library(lattice)
+library(directlabels)
+jetsh = read_net(iac_example("jets_sharks.yaml"))
+jetsh = set_external(jetsh, "Ken", 1.0)
+# add random noise to the network
+jetsh$params$noise = .01
+outK = sim_batch(jetsh, nsims = 10, ncycles = 50)
+outK$task = "Ken"
+jetsh = reset(jetsh)
+jetsh = set_external(jetsh, "Al", 1.0)
+outA = sim_batch(jetsh, nsims = 10, ncycles = 50)
+outA$task = "Al"
+# compare the two tasks
+out = rbind(outA, outK)
+plot_acts(out, cond = "task", roi = c("Ken", "Al", "jets", "sharks"))
+}
 }
 \seealso{
-read_net(), cycle(),
+read_net(), cycle(), plot_acts()
 }

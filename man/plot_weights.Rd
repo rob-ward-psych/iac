@@ -11,17 +11,10 @@ plot_weights(weights, ...)
 matrix (e.g., \code{network$weights}), but for bigger networks it can be more
 useful to look at a subset. This subset of weights can be specified
 manually (e.g., \code{network$weights[1:5, 20:29]}), or conveniently using
-weights_slice(), which makes it easy to extract the connections between two
+\code{weights_slice()}, which makes it easy to extract the connections between two
 pools within a network.}
 
-\item{...}{
-  Arguments passed on to \code{\link[graphics:plot.default]{graphics::plot}}
-  \describe{
-    \item{\code{x,y}}{the \code{x} and \code{y} arguments provide the x and y
-    coordinates for the plot.  Any reasonable way of defining the
-    coordinates is acceptable.  See the function \code{\link{xy.coords}}
-    for details.  If supplied separately, they must be of the same length.}
-  }}
+\item{...}{The various optional arguments for plot, eg main, etc}
 }
 \description{
 The sending (or "from") units are plotted on the y-axis, the receiving (or

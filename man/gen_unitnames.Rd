@@ -16,15 +16,15 @@ name}
 A vector of appropriate unitnames
 }
 \description{
-Used internally by read_network().
-\strong{Not needed} if you are using read_network() to create your network.
+Used internally by \code{read_network()}.
+\strong{Not needed} if you are using \code{read_network()} to create your network.
 These and other functions are only used if you are creating your network
 direct from code. Know that when a network
 is read from .yaml file, it uses these routines so you don't have to.
 This is a utility to make it easier to code systematic
 unitnames inside a pool.
-The general idea is that names = paste0(prefix, basenames).
+The general idea is that \code{names = paste0(prefix, basenames)}.
 expand.grid is used on basenames and so the above is exactly true if
-basenames is 1D. Otherwise, all combos of vector values are generated,
+basenames is a vector. Otherwise, all combos of vector values are generated,
 with the first vector changing fastest
 }

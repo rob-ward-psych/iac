@@ -10,7 +10,7 @@
 #'   is to plot all cycles,
 #' @param mar Optionally call the mar graphics parameter, useful for making more
 #'   room for labels on the right (default = c(4,4,2,3))
-#' @inheritDotParams graphics::matplot
+#' @param ... The various optional arguments for plot, eg xlim, ylab, main, etc
 #' @examples
 #' # load the jets-sharks example
 #' jetsh = read_net(iac_example("jets_sharks.yaml"), verbose =FALSE)
@@ -83,16 +83,16 @@ plot_log = function(toplot, roi = NULL, cycles = NULL,
   plot_fn(M, x, roi, ...)
 }
 
-#' Plot selected unit activations by cycle with formula and labels
+#' Plot selected units when using sim_batch
 #'
 #' Make a quick plot of selected unit activations, using the lattice and
 #' directlabels packages. There is a bug where an roi of a single unit
 #' doesn't work.
 #'
-#' @param log A dataframe of unit activations. Unlike the
+#' @param toplot A dataframe of unit activations. Unlike the
 #'   regular plot_log fn, this can also plot the output of
-#'   sim_batch(). The plotted results are the mean activation of each cycle. One
-#'   of the columns must be named "cycle" (as will be the case if a network$log
+#'   `sim_batch()`. The plotted results are the mean activation of each cycle. One
+#'   of the columns must be named "cycle" (as will be the case if a `network$log`
 #'   or output from sim_batch is plotted)
 #' @param roi A vector specifying which columns to plot, this can be either
 #'   numeric values specifying indices, or ideally, unit names
@@ -105,11 +105,31 @@ plot_log = function(toplot, roi = NULL, cycles = NULL,
 #' is to plot all cycles,
 #' @param labelstyle A label style that is valid for the directlabels package
 #'   (default = "last.bumpup")
-#' @inheritDotParams lattice::xyplot
-#' @seealso read_net(), set_external(), cycle(), reset()
+#' @param ... The various optional arguments for `lattice::xyplot`, xlab, layout, etc
+#' @seealso sim_batch()
+#' @examples
+#' \dontrun{
+#' # This would take time to run
+#' library(lattice)
+#' library(directlabels)
+#' jetsh = read_net(iac_example("jets_sharks.yaml"))
+#' jetsh = set_external(jetsh, "Ken", 1.0)
+#' # add random noise to the network
+#' jetsh$params$noise = .01
+#' outK = sim_batch(jetsh, nsims = 10, ncycles = 50)
+#' outK$task = "Ken"
+#' jetsh = reset(jetsh)
+#' jetsh = set_external(jetsh, "Al", 1.0)
+#' outA = sim_batch(jetsh, nsims = 10, ncycles = 50)
+#' outA$task = "Al"
+#' # compare the two tasks
+#' out = rbind(outA, outK)
+#' plot_acts(out, cond = "task", roi = c("Ken", "Al", "jets", "sharks"))
+#'}
+#'
 #' @export
 #'
-plot_acts = function(log, roi, condition=NULL, cycles = NULL, labelstyle="last.bumpup", ...) {
+plot_acts = function(toplot, roi, condition=NULL, cycles = NULL, labelstyle="last.bumpup", ...) {
   if(!(requireNamespace("lattice", quietly=TRUE) &
        requireNamespace("directlabels", quietly=TRUE))) {
     stop("The lattice and directlabels packages need to be installed to use this function.",
@@ -141,12 +161,15 @@ plot_acts = function(log, roi, condition=NULL, cycles = NULL, labelstyle="last.b
 #'
 #' @param network The network
 #' @param from,to The names of existing pools within network
-#' @return A matrix from network$weights matrix, where rows are the units in
+#' @returns A matrix from within `network$weights`, where rows are the units in
 #' the `from` pool, and columns are units from the `to` pool.
-#' This matrix is suitable for plot_weights() or other inspection
-#' @seealso plot_weights(), read_net()
-#'
+#' This matrix is suitable for `plot_weights()` or other inspection
+#' @examples
+#' # load the jets_sharks network
+#' jetsh = read_net(iac_example("jets_sharks.yaml"), verbose = FALSE)
+#' weights_slice(jetsh, from='gang', to='instance')
 #' @export
+#' @seealso plot_weights()
 #'
 weights_slice = function(network, from, to) {
   # make sure "from" and "to" refer to pools within the network
@@ -167,9 +190,10 @@ weights_slice = function(network, from, to) {
 #'   matrix (e.g., `network$weights`), but for bigger networks it can be more
 #'   useful to look at a subset. This subset of weights can be specified
 #'   manually (e.g., `network$weights[1:5, 20:29]`), or conveniently using
-#'   weights_slice(), which makes it easy to extract the connections between two
+#'   `weights_slice()`, which makes it easy to extract the connections between two
 #'   pools within a network.
-#' @inheritDotParams graphics::plot
+#' @param ... The various optional arguments for plot, eg main, etc
+#'
 #' @examples
 #' # load the jets_sharks network
 #' jetsh = read_net(iac_example("jets_sharks.yaml"), verbose = FALSE)
@@ -215,6 +239,12 @@ plot_weights = function(weights, ...) {
 #' @param from,to A vector of unitnames (not pool names). Exactly one of these
 #' is specified. Currently, if both are, `to` is ignored.
 #' @returns The vector of non-zero weights from or to the specified units.
+#' @examples
+#' # load the jets_sharks network
+#' jetsh = read_net(iac_example("jets_sharks.yaml"), verbose = FALSE)
+#' # see the non-zero connections from the Ken instance (_Ken)
+#' show_weights(jetsh, from = '_Ken')
+#'
 #' @export
 #'
 show_weights = function(network, from = NULL, to = NULL) {
@@ -238,12 +268,12 @@ show_weights = function(network, from = NULL, to = NULL) {
 #' function make them easy to access.
 #' @param path Name of file. If NULL all the example files are listed.
 #' @examples
-#' # get a list of all available files
+#' # returns a list of all available files
 #' iac_example()
-#' # load the jets-sharks network
+#' # load the jets-sharks network that comes with the iac package
 #' jetsh = iac_example("jets_sharks.yaml")
 #' net = read_net(jetsh)
-#' # open an example for inspection in RStudio
+#' # open an example network for inspection in RStudio
 #' file.edit(iac_example("what_where.yaml"))
 #' @export
 #'

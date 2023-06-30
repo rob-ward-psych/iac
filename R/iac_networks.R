@@ -1,7 +1,7 @@
 #' Create a new network in code
 #'
-#' Used internally by read_network().
-#' **Not needed** if you are using read_network() to create your network.
+#' Used internally by `read_network()`.
+#' **Not needed** if you are using `read_network()` to create your network.
 #' These and other functions are only used if you are creating your network
 #' direct from code. Know that when a network
 #' is read from .yaml file, it uses these routines so you don't have to.
@@ -17,16 +17,16 @@ new_network = function() {
 
 #' Generate unitnames for a pool
 #'
-#' Used internally by read_network().
-#' **Not needed** if you are using read_network() to create your network.
+#' Used internally by `read_network()`.
+#' **Not needed** if you are using `read_network()` to create your network.
 #' These and other functions are only used if you are creating your network
 #' direct from code. Know that when a network
 #' is read from .yaml file, it uses these routines so you don't have to.
 #' This is a utility to make it easier to code systematic
 #' unitnames inside a pool.
-#' The general idea is that names = paste0(prefix, basenames).
+#' The general idea is that `names = paste0(prefix, basenames)`.
 #' expand.grid is used on basenames and so the above is exactly true if
-#' basenames is 1D. Otherwise, all combos of vector values are generated,
+#' basenames is a vector. Otherwise, all combos of vector values are generated,
 #' with the first vector changing fastest
 #' @param prefix A string value pasted without spaces in front of each generated
 #' name
@@ -76,21 +76,21 @@ spec2indices = function(network, unitspec) {
 
 #' Connect units in a network
 #'
-#' Used internally by read_network().
-#' **Not needed** if you are using read_network() to create your network.
+#' Used internally by `read_network()`.
+#' **Not needed** if you are using `read_network()` to create your network.
 #' These and other functions are only used if you are creating your network
 #' direct from code. Know that when a network is read from .yaml file, it uses
 #' these routines so you don't have to.
 #'
-#' connect_units() is a monster workhorse function internally, but it is called
+#' `connect_units()` is a horrible monster workhorse function internally, but it is called
 #' using the same keywords as used when specifying networks with the .yaml file
-#' and read_network()
+#' and `read_network()`
 #' @param network The network getting connected up, usually created by
-#'   read_network(), but probably new_network() in this case
-#' @param from,to All the from units are connected to all the to units. `from`
+#'   `read_network()`, but probably `new_network()` in this case
+#' @param from,to All the _from_ units are connected to all the _to_ units. `from`
 #'   and `to` can be a pool name, or a vector of string indices which will be
 #'   converted into indices into network$weights.
-#' @param weight The numerical value of the connection weight
+#' @param weight The numeric value of the connection weight
 #' @param from_dims,to_dims In pools with spatial organisation, these show the
 #'   corresponding dimensions of the pools. See the documentation on spatial
 #'   networks.
@@ -99,7 +99,7 @@ spec2indices = function(network, unitspec) {
 #'   "self", and "others". See the documentation on spatial networks.
 #' @param verbose Prints a description of the units being connected to the
 #'   console (default = FALSE)
-#' @returns A network where network$weights is updated with the new connection
+#' @returns A network where `network$weights` is updated with the new connection
 #'   values
 #' @export
 #'
@@ -339,20 +339,20 @@ connect_units = function(network, from, to, weight, directives = 'reciprocal',
 
 #' Add a pool to the network
 #'
-#' Used internally by read_network().
-#' **Not needed** if you are using read_network() to create your network.
+#' Used internally by `read_network()`.
+#' **Not needed** if you are using `read_network()` to create your network.
 #' These and other functions are only used if you are creating your network
 #' direct from code. Know that when a network
 #' is read from .yaml file, it uses these routines so you don't have to.
 #'
 #' @param network The network getting connected up, usually created by
-#' read_network(), but probably new_network() in this case
+#' `read_network()`, but probably `new_network()` in this case
 #' @param poolname Name of the pool, needs to be a legal R variable name
 #' @param shape A vector specifying the size of each dimension within the pool The numerical value of the connection weight
 #' @param unitnames A vector of unitnames, one for each unit in the pool. These
 #' need to be legal R variable names. Usually they would be generated automatically
-#' using the gen_unitnames() function
-#' @param verbose Gives details about the units as they are being added, useful
+#' using the `gen_unitnames()` function
+#' @param verbose Gives messages with details about units as they are being added
 #' @returns A network with the new pool
 #' @export
 #'
@@ -414,8 +414,8 @@ add_pool = function(network, poolname, shape, unitnames, verbose = FALSE) {
 #' @examples
 #' jetsh = read_net(iac_example("jets_sharks.yaml"))
 #' jetsh = set_external(jetsh, "Ken", 1.0)
-#' jetsh = iac::cycle(jetsh, ncycles = 100)
-#' #
+#' jetsh = cycle(jetsh, ncycles = 100)
+#' # Ken is a burglar in the Sharks, what is retrieved from his name?
 #' plot_log(jetsh, roi=c("Ken", "_Ken", "jets", "sharks", "burglar", "bookie"),
 #' main="Ken is a burgling Shark")
 #'

@@ -12,13 +12,18 @@ weights_slice(network, from, to)
 \item{from, to}{The names of existing pools within network}
 }
 \value{
-A matrix from network$weights matrix, where rows are the units in
+A matrix from within \code{network$weights}, where rows are the units in
 the \code{from} pool, and columns are units from the \code{to} pool.
-This matrix is suitable for plot_weights() or other inspection
+This matrix is suitable for \code{plot_weights()} or other inspection
 }
 \description{
 Extract the weights between two pools
 }
+\examples{
+# load the jets_sharks network
+jetsh = read_net(iac_example("jets_sharks.yaml"), verbose = FALSE)
+weights_slice(jetsh, from='gang', to='instance')
+}
 \seealso{
-plot_weights(), read_net()
+plot_weights()
 }

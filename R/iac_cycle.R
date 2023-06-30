@@ -13,18 +13,18 @@
 #' input. The activation function is direct from McClelland & Rumelhart (1981).
 #'
 #'
-#' @param network A network, usually created with read_net()
-#' @param ncycles The number of cycles to run
+#' @param network A network, usually created with `read_net()`
+#' @param ncycles The number of cycles to run (default = 1)
 #' @param verbose Prints the cycle number and current sum-squared activation
 #' difference from the previous cycle
-#' @param warnings If TRUE, will give a warning if external input = 0 (default TRUE)
+#' @param warnings If TRUE, will give a warning if there's no external input (default TRUE)
 #' @param OG If TRUE, will run network cycles using loop-based code based on
 #' McClelland's original PDP Handbook, link below. Otherwise runs a vectorised version which
 #' is not optimised but much faster, especially with networks of 100+ units
 #' (default FALSE)
 #' @return A network with updated activation state and activation log,
 #'  suitable for `plot_log()`
-#' @seealso read_net(),set_external(),plot_log(),reset()
+#' @seealso read_net(), set_external(), plot_log(), reset()
 #' @export
 #'
 cycle = function(network, ncycles = 1,
@@ -196,12 +196,12 @@ cycle = function(network, ncycles = 1,
 #'
 #' This means returning activation levels
 #' to rest (which is usually _not_ 0), and clearing the activation log.
-#' HOWEVER, the external inputs are maintained. Use clear_external(network)
+#' HOWEVER, the external inputs are maintained. Use `clear_external(network)`
 #' to zero those. Separating reset of network activation values from reset of
 #' external inputs seemed to make things tidier when running repeated simulations
 #' @param network The network
 #' @return The network with resting activation and cleared activation log
-#' @seealso read_net(),set_external(),cycle(),plot_log()
+#' @seealso read_net(), set_external(), cycle(), plot_log()
 #' @export
 #'
 reset = function(network) {
@@ -224,7 +224,7 @@ reset = function(network) {
 #' @param activations A numeric vector giving the value of external input
 #' for each of the specified units
 #' @return The network with external inputs updated for subsequent calls
-#' to cycle()
+#' to `cycle()`
 #' @seealso read_net(), cycle(), reset(), clear_external()
 #' @export
 #'
@@ -237,8 +237,8 @@ set_external = function(network, units, activations) {
 
 #' Zero the external input to the network.
 #'
-#' This is strictly to make intentions clear. It can be done as easily as:
-#' network$external = 0
+#' This is usually not needed, as `set_external()` zeroes external inputs before
+#' setting to new values.
 #'
 #' @param network The network
 #' @return The network without external input
@@ -250,9 +250,15 @@ clear_external = function(network) {
   return(network)
 }
 
-#' Runs a batch of simulations. This is useful when you want to generate a
-#' distrbution of results when using the noise parameter (without noise, every
-#' run of a network will be the same)
+#' Run a batch of simulations.
+#'
+#' This is useful when you want to generate a
+#' distrbution of results while using the noise parameter. Without noise, every
+#' run of a network will be the same, and so there's not much point in running
+#' a batch.
+#'
+#' The `noise` param can be set in the network .yaml file, or manually as
+#' `network$params$noise = .01` (or whatever value)
 #'
 #' @param network The network
 #' @param nsims The number of simulations in this batch
@@ -260,7 +266,26 @@ clear_external = function(network) {
 #' @return A dataframe where columns represent sim number, cycle, and every unit
 #' in the network, and rows provide activations for each unit on each cycle of
 #' each sim.
-#' @seealso read_net(), cycle(),
+#' @seealso read_net(), cycle(), plot_acts()
+#' @examples
+#' \dontrun{
+#' # This would take time to run
+#' library(lattice)
+#' library(directlabels)
+#' jetsh = read_net(iac_example("jets_sharks.yaml"))
+#' jetsh = set_external(jetsh, "Ken", 1.0)
+#' # add random noise to the network
+#' jetsh$params$noise = .01
+#' outK = sim_batch(jetsh, nsims = 10, ncycles = 50)
+#' outK$task = "Ken"
+#' jetsh = reset(jetsh)
+#' jetsh = set_external(jetsh, "Al", 1.0)
+#' outA = sim_batch(jetsh, nsims = 10, ncycles = 50)
+#' outA$task = "Al"
+#' # compare the two tasks
+#' out = rbind(outA, outK)
+#' plot_acts(out, cond = "task", roi = c("Ken", "Al", "jets", "sharks"))
+#'}
 #' @export
 #'
 sim_batch = function(network, nsims, ncycles) {
@@ -296,6 +321,7 @@ sim_batch = function(network, nsims, ncycles) {
 #' units, use the noisy_units and xtra_unit_noise parameters. To add noise to
 #' the weights, use the noisy_cxn_src, noisy_cxn_dst, and xtra_cxn_noise
 #' parameters.
+#'
 #' These effects are in addition to the global noise parameter.
 #'
 #' @param network The network, with external inputs set and noise > 0

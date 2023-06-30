@@ -17,13 +17,13 @@ connect_units(
 }
 \arguments{
 \item{network}{The network getting connected up, usually created by
-read_network(), but probably new_network() in this case}
+\code{read_network()}, but probably \code{new_network()} in this case}
 
-\item{from, to}{All the from units are connected to all the to units. \code{from}
+\item{from, to}{All the \emph{from} units are connected to all the \emph{to} units. \code{from}
 and \code{to} can be a pool name, or a vector of string indices which will be
 converted into indices into network$weights.}
 
-\item{weight}{The numerical value of the connection weight}
+\item{weight}{The numeric value of the connection weight}
 
 \item{directives}{A vector of strings giving optional detail about the
 connection. Legal directives are: "oneway", "reciprocal" (default), "add",
@@ -37,18 +37,18 @@ networks.}
 console (default = FALSE)}
 }
 \value{
-A network where network$weights is updated with the new connection
+A network where \code{network$weights} is updated with the new connection
 values
 }
 \description{
-Used internally by read_network().
-\strong{Not needed} if you are using read_network() to create your network.
+Used internally by \code{read_network()}.
+\strong{Not needed} if you are using \code{read_network()} to create your network.
 These and other functions are only used if you are creating your network
 direct from code. Know that when a network is read from .yaml file, it uses
 these routines so you don't have to.
 }
 \details{
-connect_units() is a monster workhorse function internally, but it is called
+\code{connect_units()} is a horrible monster workhorse function internally, but it is called
 using the same keywords as used when specifying networks with the .yaml file
-and read_network()
+and \code{read_network()}
 }

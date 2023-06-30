@@ -18,3 +18,10 @@ The vector of non-zero weights from or to the specified units.
 \description{
 A way to quickly check network connections
 }
+\examples{
+# load the jets_sharks network
+jetsh = read_net(iac_example("jets_sharks.yaml"), verbose = FALSE)
+# see the non-zero connections from the Ken instance (_Ken)
+show_weights(jetsh, from = '_Ken')
+
+}

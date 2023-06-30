@@ -8,7 +8,7 @@ add_pool(network, poolname, shape, unitnames, verbose = FALSE)
 }
 \arguments{
 \item{network}{The network getting connected up, usually created by
-read_network(), but probably new_network() in this case}
+\code{read_network()}, but probably \code{new_network()} in this case}
 
 \item{poolname}{Name of the pool, needs to be a legal R variable name}
 
@@ -16,16 +16,16 @@ read_network(), but probably new_network() in this case}
 
 \item{unitnames}{A vector of unitnames, one for each unit in the pool. These
 need to be legal R variable names. Usually they would be generated automatically
-using the gen_unitnames() function}
+using the \code{gen_unitnames()} function}
 
-\item{verbose}{Gives details about the units as they are being added, useful}
+\item{verbose}{Gives messages with details about units as they are being added}
 }
 \value{
 A network with the new pool
 }
 \description{
-Used internally by read_network().
-\strong{Not needed} if you are using read_network() to create your network.
+Used internally by \code{read_network()}.
+\strong{Not needed} if you are using \code{read_network()} to create your network.
 These and other functions are only used if you are creating your network
 direct from code. Know that when a network
 is read from .yaml file, it uses these routines so you don't have to.

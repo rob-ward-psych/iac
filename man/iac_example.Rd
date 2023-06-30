@@ -14,11 +14,11 @@ iac comes bundled with some example files in its inst/extdata directory. This
 function make them easy to access.
 }
 \examples{
-# get a list of all available files
+# returns a list of all available files
 iac_example()
-# load the jets-sharks network
+# load the jets-sharks network that comes with the iac package
 jetsh = iac_example("jets_sharks.yaml")
 net = read_net(jetsh)
-# open an example for inspection in RStudio
+# open an example network for inspection in RStudio
 file.edit(iac_example("what_where.yaml"))
 }

@@ -7,11 +7,11 @@
 cycle(network, ncycles = 1, warnings = TRUE, verbose = FALSE, OG = FALSE)
 }
 \arguments{
-\item{network}{A network, usually created with read_net()}
+\item{network}{A network, usually created with \code{read_net()}}
 
-\item{ncycles}{The number of cycles to run}
+\item{ncycles}{The number of cycles to run (default = 1)}
 
-\item{warnings}{If TRUE, will give a warning if external input = 0 (default TRUE)}
+\item{warnings}{If TRUE, will give a warning if there's no external input (default TRUE)}
 
 \item{verbose}{Prints the cycle number and current sum-squared activation
 difference from the previous cycle}
@@ -39,5 +39,5 @@ The second step of the cycle is to \emph{update} unit activations based on their
 input. The activation function is direct from McClelland & Rumelhart (1981).
 }
 \seealso{
-read_net(),set_external(),plot_log(),reset()
+read_net(), set_external(), plot_log(), reset()
 }

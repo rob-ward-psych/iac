@@ -15,10 +15,10 @@ The network with resting activation and cleared activation log
 \description{
 This means returning activation levels
 to rest (which is usually \emph{not} 0), and clearing the activation log.
-HOWEVER, the external inputs are maintained. Use clear_external(network)
+HOWEVER, the external inputs are maintained. Use \code{clear_external(network)}
 to zero those. Separating reset of network activation values from reset of
 external inputs seemed to make things tidier when running repeated simulations
 }
 \seealso{
-read_net(),set_external(),cycle(),plot_log()
+read_net(), set_external(), cycle(), plot_log()
 }

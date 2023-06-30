@@ -18,7 +18,7 @@ for each of the specified units}
 }
 \value{
 The network with external inputs updated for subsequent calls
-to cycle()
+to \code{cycle()}
 }
 \description{
 This external input will remain

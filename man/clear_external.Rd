@@ -13,8 +13,8 @@ clear_external(network)
 The network without external input
 }
 \description{
-This is strictly to make intentions clear. It can be done as easily as:
-network$external = 0
+This is usually not needed, as \code{set_external()} zeroes external inputs before
+setting to new values.
 }
 \seealso{
 read_net(), cycle(), reset(), set_external()

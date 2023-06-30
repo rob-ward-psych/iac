@@ -47,5 +47,7 @@ be added to the weights of specific connections. To add noise to specific
 units, use the noisy_units and xtra_unit_noise parameters. To add noise to
 the weights, use the noisy_cxn_src, noisy_cxn_dst, and xtra_cxn_noise
 parameters.
+}
+\details{
 These effects are in addition to the global noise parameter.
 }
