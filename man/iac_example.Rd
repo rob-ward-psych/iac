@@ -20,5 +20,5 @@ iac_example()
 jetsh = iac_example("jets_sharks.yaml")
 net = read_net(jetsh)
 # open an example network for inspection in RStudio
-file.edit(iac_example("what_where.yaml"))
+if (interactive()) file.edit(iac_example("what_where.yaml"))
 }
