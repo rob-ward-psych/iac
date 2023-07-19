@@ -10,9 +10,9 @@ sim_batch_noisy(
   ncycles,
   noisy_units = NULL,
   xtra_unit_noise = 0,
-  noisy_cxn_src = NULL,
-  noisy_cxn_dst = NULL,
-  xtra_cxn_noise = 0
+  noisy_cxn_mat = NULL,
+  xtra_cxn_noise = 0,
+  randwalk = TRUE
 )
 }
 \arguments{
@@ -26,14 +26,20 @@ sim_batch_noisy(
 
 \item{xtra_unit_noise}{The random noise added as input to any noisy_units,
 called as runif(min = -xtra_unit_noise, max = xtra_unit_noise) and applied
-as external input ot the noisy units}
+as external input ot the noisy units.}
 
-\item{noisy_cxn_src, noisy_cxn_dst}{Indices into network$weights specifying
-the set of weights that will be disrupted}
+\item{noisy_cxn_mat}{An Nx2 matrix format, where N = the number of
+connections and \verb{[, 1]} = row of weight matrix (sender), and \verb{[, 2]} = col of
+weight matrix (receiver). The connections corresponding to the sender and receiver
+units of \code{network$weights} will be disrupted}
 
-\item{xtra_cxn_noise}{The random nise added to the noisy connection weight.
-The noisy connections are reset to original values and new noise added each
-cycle (ie not a random walk)}
+\item{xtra_cxn_noise}{The random noise to be added to the weights if noisy_cxn_mat
+is specified.}
+
+\item{randwalk}{If TRUE (default), then all the specified noisy connections will
+accumulate noise over cycles. If set to FALSE, then the the noisy connections
+are reset to their original values each cycle before noise is added. This
+parameter only has effect on weights specified in noisy_cxn_mat.}
 }
 \value{
 A dataframe containing the activations (indexed by the unitnames of
